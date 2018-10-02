@@ -10,12 +10,10 @@ import java.util.ArrayList;
 
 public class ServerSendThread extends Thread {
     ArrayList<PrintWriter> outArray;
-    ArrayList<Socket> socArray;
     ArrayList<String> msgArray;
     final Object lock;
 
-    public ServerSendThread(ArrayList<Socket> socArray, ArrayList<PrintWriter> outArray, Object lock, ArrayList<String> msgArray) throws IOException {
-        this.socArray = socArray;
+    public ServerSendThread(ArrayList<PrintWriter> outArray, Object lock, ArrayList<String> msgArray){
         this.outArray = outArray;
         this.lock = lock;
         this.msgArray = msgArray;
@@ -29,6 +27,7 @@ public class ServerSendThread extends Thread {
             while (true) {
                 synchronized(lock) {
                     if(prevSize != msgArray.size()) {
+
                         for (int i = 0; i < outArray.size(); ++i) {
                             outArray.get(i).println(msgArray.get(msgArray.size() - 1));
                         }

@@ -11,18 +11,17 @@ public class EchoServer {
 	public static void main(String[] args) throws IOException {
 		ServerSocket serverSocket = null;
 		final Object  lock = new Object();
+
 		ArrayList<String> msgArray = new ArrayList<String>();
-		ArrayList<Socket> socArray = new ArrayList<Socket>();
 		ArrayList<PrintWriter> outArray = new ArrayList<PrintWriter>();
 
 		try {
 			serverSocket = new ServerSocket(10001);
-			ServerSendThread sendThread = new ServerSendThread(socArray, outArray, lock, msgArray);
+			ServerSendThread sendThread = new ServerSendThread(outArray, lock, msgArray);
 			sendThread.start();
 
 		    while(true) {
                 Socket clientSocket = serverSocket.accept();
-				socArray.add(clientSocket);
 				outArray.add(new PrintWriter(clientSocket.getOutputStream(), true));
 				new ServerRecvThread(clientSocket, lock, msgArray).start();
                 System.out.println("client connected from " + clientSocket.getInetAddress());
