@@ -34,8 +34,13 @@ public class GameController {
 	public Response startGame() throws URISyntaxException{
 		//TODO: Add your code here
 		String uid = generateString();
-		games.put(uid, generateNumber());
+		Integer num = generateNumber();
+		while(!isValidNumber(num.toString())) {
+			num = generateNumber();
+		}
+		games.put(uid, num);
 		turns.put(uid, 0);
+		successes.put(uid, false);
 		return Response.created(new URI("/games")).entity(uid).build();
 	}
 	
@@ -99,15 +104,23 @@ public class GameController {
 		 if(num.length() != 4) {
 			 return false;
 		 }
-		 ArrayList<Character> numList = new ArrayList<Character>();
 		 
-		 for(int i = 0 ; i < num.length() ; ++ i) {
-			 numList.add(num.charAt(i));
+		 try {
+			 Integer.parseInt(num);
+		 }catch(NumberFormatException e){
+			 return false;
 		 }
 		 
-		 if(num.length() != numList.stream().
-				 distinct().collect(Collectors.toList()).size()) {
+		 if(num.charAt(0) == '0') {
 			 return false;
+		 }
+		 
+		 for(int i = 0 ; i < 4 ; ++ i) {
+			 for(int j = 0 ; j < 4 ; ++ j) {
+				 if(i != j && num.charAt(i) == num.charAt(j)) {
+					 return false;
+				 }
+			 }
 		 }
 		 
 		 return true;
@@ -117,6 +130,7 @@ public class GameController {
 		 ArrayList<GameData> gamesList = new ArrayList<GameData>();
 		 
 		 for(String uid : games.keySet()) {
+			 System.out.println(uid);
 			 gamesList.add(new GameData(uid, turns.get(uid), 
 					 successes.get(uid) ? games.get(uid).toString() : "****", successes.get(uid)));
 			
