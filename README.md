@@ -1,4 +1,5 @@
 # netprog
 Multiclient Chat <br>
 Servlet DB (http://localhost:8080/ServletTutorial/index) <br>
-jersey-rest-homework
+jersey-rest-homework <br>
+RegEx & CSS selectors homework
